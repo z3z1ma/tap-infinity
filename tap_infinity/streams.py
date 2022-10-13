@@ -70,6 +70,7 @@ class InfinityOneStream(Stream):
     name = "infinity_one"
     primary_keys = ["id"]
     replication_key = "rep_key"
+    _force_batch_message = False
 
     @property
     def schema(self) -> dict:
