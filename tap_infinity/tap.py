@@ -4,54 +4,88 @@ from typing import List
 
 from singer_sdk import Tap, Stream
 from singer_sdk import typing as th  # JSON schema typing helpers
-# TODO: Import your custom stream types here:
-from tap_infinity.streams import (
-    InfinityStream,
-    UsersStream,
-    GroupsStream,
+from singer_sdk.helpers._classproperty import classproperty
+from tap_infinity.streams import InfinityOneStream
+from singer_sdk.helpers.capabilities import (
+    CapabilitiesEnum,
+    PluginCapabilities,
+    TapCapabilities,
 )
-# TODO: Compile a list of custom stream types here
-#       OR rewrite discover_streams() below with your custom logic.
-STREAM_TYPES = [
-    UsersStream,
-    GroupsStream,
-]
 
 
 class TapInfinity(Tap):
     """Infinity tap class."""
+
     name = "tap-infinity"
 
-    # TODO: Update this section with the actual config values you expect:
     config_jsonschema = th.PropertiesList(
         th.Property(
-            "auth_token",
-            th.StringType,
-            required=True,
-            description="The token to authenticate against the API service"
+            "row_count",
+            th.IntegerType,
+            required=False,
+            default=100_000,
+            description="Number of rows to emit",
         ),
         th.Property(
-            "project_ids",
-            th.ArrayType(th.StringType),
-            required=True,
-            description="Project IDs to replicate"
+            "column_count",
+            th.IntegerType,
+            required=False,
+            default=30,
+            description="Number of columns in each row",
         ),
         th.Property(
-            "start_date",
-            th.DateTimeType,
-            description="The earliest record date to sync"
+            "batch_size",
+            th.IntegerType,
+            required=False,
+            default=1_000_000,
+            description="Size of batch files",
         ),
         th.Property(
-            "api_url",
-            th.StringType,
-            default="https://api.mysample.com",
-            description="The url for the API service"
+            "batch_config",
+            th.ObjectType(
+                th.Property(
+                    "encoding",
+                    th.ObjectType(
+                        th.Property("format", th.StringType, required=True),
+                        th.Property("compression", th.StringType, required=True),
+                    ),
+                    required=True,
+                ),
+                th.Property(
+                    "storage",
+                    th.ObjectType(
+                        th.Property("root", th.StringType, required=True),
+                        th.Property(
+                            "prefix", th.StringType, required=False, default=""
+                        ),
+                    ),
+                    required=True,
+                ),
+            ),
+            required=False,
         ),
     ).to_dict()
 
     def discover_streams(self) -> List[Stream]:
         """Return a list of discovered streams."""
-        return [stream_class(tap=self) for stream_class in STREAM_TYPES]
+        return [InfinityOneStream(tap=self)]
+
+    @classproperty
+    def capabilities(self) -> List[CapabilitiesEnum]:
+        """Get tap capabilities.
+
+        Returns:
+            A list of capabilities supported by this tap.
+        """
+        return [
+            TapCapabilities.CATALOG,
+            TapCapabilities.STATE,
+            TapCapabilities.DISCOVER,
+            PluginCapabilities.ABOUT,
+            PluginCapabilities.STREAM_MAPS,
+            PluginCapabilities.FLATTENING,
+            PluginCapabilities.BATCH,
+        ]
 
 
 if __name__ == "__main__":

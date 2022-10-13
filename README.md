@@ -4,58 +4,36 @@
 
 Built with the [Meltano Tap SDK](https://sdk.meltano.com) for Singer Taps.
 
-<!--
+## Capabilities
 
-Developer TODO: Update the below as needed to correctly describe the install procedure. For instance, if you do not have a PyPi repo, or if you want users to directly install from your git repo, you can modify this step as appropriate.
+* `catalog`
+* `state`
+* `discover`
+* `about`
+* `stream-maps`
+* `schema-flattening`
+* `batch`
 
-## Installation
+## Settings
 
-Install from PyPi:
+| Setting             | Required | Default | Description |
+|:--------------------|:--------:|:-------:|:------------|
+| row_count           | False    |  100000 | Number of rows to emit |
+| column_count        | False    |      30 | Number of columns in each row |
+| batch_size          | False    | 1000000 | Size of batch files |
+| batch_config        | False    | None    |             |
+| stream_maps         | False    | None    | Config object for stream maps capability. For more information check out [Stream Maps](https://sdk.meltano.com/en/latest/stream_maps.html). |
+| stream_map_config   | False    | None    | User-defined config values to be used within map expressions. |
+| flattening_enabled  | False    | None    | 'True' to enable schema flattening and automatically expand nested properties. |
+| flattening_max_depth| False    | None    | The max depth to flatten schemas. |
 
-```bash
-pipx install tap-infinity
-```
-
-Install from GitHub:
-
-```bash
-pipx install git+https://github.com/ORG_NAME/tap-infinity.git@main
-```
-
--->
-
-## Configuration
-
-### Accepted Config Options
-
-<!--
-Developer TODO: Provide a list of config options accepted by the tap.
-
-This section can be created by copy-pasting the CLI output from:
-
-```
-tap-infinity --about --format=markdown
-```
--->
-
-A full list of supported settings and capabilities for this
-tap is available by running:
-
-```bash
-tap-infinity --about
-```
+A full list of supported settings and capabilities is available by running: `tap-infinity --about`
 
 ### Configure using environment variables
 
 This Singer tap will automatically import any environment variables within the working directory's
 `.env` if the `--config=ENV` is provided, such that config values will be considered if a matching
 environment variable is set either in the terminal context or in the `.env` file.
-
-### Source Authentication and Authorization
-
-<!--
-Developer TODO: If your tap requires special access on the source system, or any special authentication requirements, provide those here.
--->
 
 ## Usage
 

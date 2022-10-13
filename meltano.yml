@@ -10,15 +10,21 @@ plugins:
     - state
     - catalog
     - discover
-    config:
-      start_date: '2010-01-01T00:00:00Z'
+    - batch
+    - about
+    - stream-maps
+    - stream-flattening
+    #config:
+    #  row_count: 100
     settings:
-    # TODO: To configure using Meltano, declare settings and their types here:
-    - name: username
-    - name: password
-      kind: password
-    - name: start_date
-      value: '2010-01-01T00:00:00Z'
+    - name: row_count
+    - name: column_count
+    - name: batch_size
+    - name: batch_config
+    - name: stream_maps
+    - name: stream_map_config
+    - name: flattening_enabled
+    - name: flattening_max_depth
   loaders:
   - name: target-jsonl
     variant: andyh1203
