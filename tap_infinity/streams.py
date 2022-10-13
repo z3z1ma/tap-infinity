@@ -161,7 +161,7 @@ class InfinityOneStream(Stream):
                     f = fs.open(filename, "wb")
                     gz = gzip.GzipFile(fileobj=f, mode="wb")
 
-                gz.write((json.dumps(record) + "\n").encode())
+                gz.write((json.dumps(record, default=str) + "\n").encode())
                 chunk_size += 1
 
             if chunk_size > 0:
